@@ -1,9 +1,9 @@
-# Sistema de Gestión Inmobiliaria
+# Sistema de Gestión Inmobiliaria 🏢
 
-Este es un proyecto grupal desarrollado en **C#** utilizando **Windows Forms** para la asignatura de **Programación II**. El objetivo principal es diseñar e implementar un sistema para la administración, registro y control de bienes raíces (propiedades, clientes y contratos), aplicando los conceptos fundamentales de la Programación Orientada a Objetos (POO), patrones de diseño y persistencia de datos en memoria.
+Este es un proyecto grupal desarrollado en **C#** utilizando **Windows Forms** para la asignatura de **Programación II**. El objetivo principal es diseñar e implementar un sistema para la administración, registro y control de bienes raíces, aplicando los conceptos fundamentales de la Programación Orientada a Objetos (POO), patrones de diseño y persistencia de datos en memoria.
 
 ## 📋 Información del Proyecto
-* **Tecnología:** C# (.NET Framework / .NET Core)
+* **Tecnología:** C# (.NET Framework)
 * **Interfaz Gráfica:** Windows Forms
 * **Paradigma:** Programación Orientada a Objetos (POO)
 * **Persistencia:** Listas en memoria (`List<T>`) mediante el patrón **Singleton**
@@ -11,41 +11,30 @@ Este es un proyecto grupal desarrollado en **C#** utilizando **Windows Forms** p
 ---
 
 ## 🏠 Descripción del Sistema
-El sistema permitirá gestionar el catálogo de una agencia inmobiliaria. Se podrán registrar propiedades (Casas, Apartamentos, Locales Comerciales) con atributos específicos (dirección, precio, cantidad de habitaciones, estado: *Disponible, Vendido o Alquilado*), así como asociar estas propiedades a clientes interesados o propietarios.
+El sistema permite gestionar el catálogo de una agencia inmobiliaria. Se pueden registrar propiedades (Casas, Apartamentos) con sus atributos específicos, registrar a los clientes, y finalmente generar **Contratos** que vinculan ambas partes y cambian el estado de disponibilidad del inmueble automáticamente.
 
 ---
 
-## 🎯 Arquitectura y Requisitos del Proyecto (5 Puntos Clave)
+## 🎯 Arquitectura y Bloques Funcionales (CRUD)
 
-Para cumplir con las pautas de evaluación y los requisitos mínimos exigidos, el desarrollo del sistema se divide formalmente en los siguientes **5 bloques funcionales**, asignados estratégicamente entre los integrantes:
+Para cumplir con la rúbrica de evaluación, el sistema se diseñó bajo una arquitectura centralizada y se dividió en **3 bloques funcionales** asignados a cada integrante:
 
-### 🚀 Bloque 1 y 2: Arquitectura Base y Registro (Tu Parte)
-* **Punto 1 - Diseño de Pantallas Base (Windows Forms):** Creación de la **Pantalla Principal / Menú** para una navegación fluida por el sistema y diseño de la **Pantalla de Creación/Registro** de propiedades. Implementación de controles variados (TextBox, ComboBox, DateTimePicker, etc.) con validaciones de entrada para asegurar que no se guarden campos vacíos o incorrectos.
-* **Punto 2 - Arquitectura POO y Persistencia Base:** Creación de las **clases de negocio esenciales** (ej. clase `Propiedad`) aplicando encapsulamiento estricto (propiedades públicas/privadas) y constructores. Implementación del patrón de diseño **Singleton** para manejar la lista global de datos en memoria (`List<Propiedad>`), permitiendo que el sistema realice la primera operación CRUD: **Crear (Registrar nuevos inmuebles)**.
+### ⚙️ Bloque 1: Arquitectura Base, Singleton y Menú (Christian Villalba)
+* **Patrón Singleton:** Creación de la clase `SistemaCentral` que funciona como la base de datos en memoria del programa, garantizando que no se pierdan datos al cambiar de pantalla.
+* **Interfaz Principal:** Diseño del `FrmMenuPrincipal` para una navegación fluida.
+* **Control de Calidad:** Implementación de la operación **Eliminar** (con validación de `MessageBox`) y estructuración de los bloques `try-catch` generales para evitar cierres inesperados.
 
-### 🛠️ Bloque 3: Módulo de Actualización y Modificación
-* **Punto 3 - Operación CRUD (Actualizar):** Desarrollo de la **Pantalla de Edición y Actualización** de registros existentes. Este módulo permite al usuario seleccionar una propiedad cargada, modificar sus datos en los controles de entrada (cambiar precio, estado de disponibilidad, etc.) y guardar los cambios directamente en la lista en memoria manipulada por el Singleton.
+### 📝 Bloque 2: Clases POO y Módulo de Registro (Wilmer Maldonado)
+* **Encapsulamiento POO:** Creación de las clases de negocio (`Inmueble`, `Cliente`, `Contrato`) utilizando propiedades privadas y públicas estrictas.
+* **Operación Crear:** Desarrollo del `FrmRegistrar` con controles variados (TextBox, ComboBox) y validaciones de entrada para asegurar formatos correctos (ej. cédulas y teléfonos venezolanos) impidiendo el registro de campos vacíos.
 
-### 📊 Bloque 4: Módulo de Visualización, Consultas y Reportes
-* **Punto 4 - Interfaz y Reportes Avanzados (Leer):** Diseño y programación de la **Pantalla de Visualización y Detalles**. Implementación de al menos **2 controles DataGridView** para listar las propiedades de forma masiva. Integración de filtros de búsqueda avanzados mediante ComboBox o ListBox para segmentar inmuebles por tipo, zona o precio (Operación CRUD: *Leer*).
-
-### ❌ Bloque 5: Módulo de Eliminación y Control de Calidad
-* **Punto 5 - Operación CRUD (Eliminar) y Excepciones:** Desarrollo del módulo para **Borrar registros de la lista**. Por seguridad del negocio, esta acción requerirá obligatoriamente una ventana de confirmación interactiva (`MessageBox`) antes de ejecutar la baja. Adicionalmente, se encarga de la implementación del manejo de errores global mediante bloques **try-catch** para asegurar que el programa jamás se cierre inesperadamente en tiempo de ejecución.
-
----
-
-## 👥 Estructura del Equipo y Asignación de Roles
-
-A partir de la arquitectura de 5 puntos definida arriba, los roles quedan distribuidos de la siguiente manera:
-
-* **Desarrollador 1 (Líder / Backend Base): Wilmer Maldonado** -> Encargado de los **Puntos 1 y 2** (Estructura base del proyecto, Singleton, Clases principales, Menú y Pantalla de Registro).
-* **Desarrollador 2:** *[Nombre del compañero]* -> Encargado del **Punto 3** (Pantalla de Edición y Actualización de registros).
-* **Desarrollador 3:** *[Nombre del compañero]* -> Encargado del **Punto 4** (Pantalla de Reportes, Consultas y carga de DataGridViews).
-* **Desarrollador 4 (Modelado e Integración): Cristian** -> Encargado de los diagramas, estructura previa y apoyo en el **Punto 5** junto a las validaciones finales del sistema.
+### 📊 Bloque 3: Operaciones, Actualización y Reportes ([Nombre del 3er Integrante])
+* **Operación Actualizar:** Desarrollo del `FrmOperaciones`, donde el usuario relaciona un Inmueble y un Cliente para crear un Contrato, alterando automáticamente el estado de la propiedad (ej. de Disponible a Vendida).
+* **Operación Leer (Reportes):** Diseño del `FrmReportes` integrando controles `DataGridView` para mostrar el inventario de inmuebles y el historial de transacciones en tiempo real.
 
 ---
 
-## 🛠️ Buenas Prácticas de Código (Estándares de Evaluación)
-* **Nomenclatura:** Uso estricto de `PascalCase` para nombres de clases, métodos y propiedades, y `camelCase` para variables locales y parámetros.
-* **Código Limpio:** Funciones bien definidas para evitar código repetido, nombres descriptivos e indentación correcta.
-* **Flujo:** Interfaz limpia, controles alineados, navegación fluida y sin duplicación ni pérdida de datos en memoria.
+## 🛠️ Buenas Prácticas de Código Aplicadas
+* **Nomenclatura:** Uso de `PascalCase` para clases/métodos y `camelCase` para variables.
+* **Rendimiento:** Uso de ramas individuales en Git para evitar colisión de código y garantizar una integración limpia en la rama principal (`main`).
+* **Experiencia de Usuario (UX):** Interfaz limpia, controles alineados y mensajes informativos claros ante cada acción.
