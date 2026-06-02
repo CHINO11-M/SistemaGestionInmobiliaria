@@ -34,6 +34,7 @@
             this.Label1 = new System.Windows.Forms.Label();
             this.CmbInmueblesEliminar = new System.Windows.Forms.ComboBox();
             this.BtnEliminar = new System.Windows.Forms.Button();
+            this.BtnSalir = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnAbrirRegistro
@@ -120,12 +121,25 @@
             this.BtnEliminar.UseVisualStyleBackColor = false;
             this.BtnEliminar.Click += new System.EventHandler(this.BtnEliminar_Click);
             // 
+            // BtnSalir
+            // 
+            this.BtnSalir.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(192)))), ((int)(((byte)(192)))));
+            this.BtnSalir.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BtnSalir.Location = new System.Drawing.Point(1393, 661);
+            this.BtnSalir.Name = "BtnSalir";
+            this.BtnSalir.Size = new System.Drawing.Size(144, 41);
+            this.BtnSalir.TabIndex = 6;
+            this.BtnSalir.Text = "🚪 Salir del Sistema";
+            this.BtnSalir.UseVisualStyleBackColor = false;
+            this.BtnSalir.Click += new System.EventHandler(this.BtnSalir_Click);
+            // 
             // FrmMenuPrincipal
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
             this.ClientSize = new System.Drawing.Size(1570, 735);
+            this.Controls.Add(this.BtnSalir);
             this.Controls.Add(this.BtnEliminar);
             this.Controls.Add(this.CmbInmueblesEliminar);
             this.Controls.Add(this.Label1);
@@ -152,6 +166,7 @@
         private System.Windows.Forms.Label Label1;
         private System.Windows.Forms.ComboBox CmbInmueblesEliminar;
         private System.Windows.Forms.Button BtnEliminar;
+        private System.Windows.Forms.Button BtnSalir;
     }
 }
 

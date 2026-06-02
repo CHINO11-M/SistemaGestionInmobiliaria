@@ -132,5 +132,20 @@ namespace SistemaGestionInmobiliaria
         {
 
         }
+
+        private void BtnSalir_Click(object sender, EventArgs e)
+        {
+            DialogResult respuesta = MessageBox.Show(
+                "¿Está seguro que desea salir del Sistema de Gestión Inmobiliaria?",
+                "Salir",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question
+            );
+
+            if (respuesta == DialogResult.Yes)
+            {
+                Application.Exit(); // Esta funcionalidad Cierra todo el programa.
+            }
+        }
     }
 }
