@@ -40,10 +40,42 @@ namespace SistemaGestionInmobiliaria
     }
 
     // =================================================================
-    // CASCARONES DE CLASES (Para que Visual Studio no dé error)
-    // El Integrante 2 se encargará de desarrollar estas clases por dentro
+    // CLASES DE DATOS (MODELOS RELLENOS)
     // =================================================================
-    public class Inmueble { }
-    public class Cliente { }
-    public class Contrato { }
+
+    public class Cliente
+    {
+        public string Nombre { get; set; }
+        public string Cedula { get; set; }
+        public string Telefono { get; set; }
+        public DateTime FechaNacimiento { get; set; }
+
+        // Formato visual para cuando aparezca en las listas desplegables
+        public override string ToString()
+        {
+            return $"{Nombre} - C.I: {Cedula}";
+        }
+    }
+
+    public class Inmueble
+    {
+        public string Tipo { get; set; }
+        public int Habitaciones { get; set; }
+        public double Metraje { get; set; }
+        public decimal PrecioUSD { get; set; }
+        public bool Disponible { get; set; }
+
+        // Formato visual para cuando aparezca en las listas desplegables
+        public override string ToString()
+        {
+            return $"{Tipo} - {Metraje}m2 - ${PrecioUSD}";
+        }
+    }
+
+    public class Contrato
+    {
+        public Cliente ClienteAsociado { get; set; }
+        public Inmueble InmuebleAsociado { get; set; }
+        public DateTime FechaOperacion { get; set; }
+    }
 }

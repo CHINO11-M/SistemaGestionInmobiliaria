@@ -17,15 +17,47 @@ namespace SistemaGestionInmobiliaria
             InitializeComponent();
         }
 
-             private void BtnAbrirRegistro_Click(object sender, EventArgs e)
-             {
+        // =======================================================
+        // MÉTODO MAESTRO DE REFRESCO
+        // =======================================================
+        private void RefrescarListaEliminar()
+        {
             try
             {
-                MessageBox.Show("Módulo en desarrollo por WILMER. ¡Pronto estará conectado!", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Paso 1: Desvinculamos la base de datos
+                CmbInmuebles.DataSource = null;
+
+                // Paso 2: Destruimos cualquier basura visual que cause la Exception
+                CmbInmuebles.Items.Clear();
+
+                // Paso 3: Verificamos y pasamos una "copia fresca" de la lista
+                if (SistemaCentral.Instancia.ListaInmuebles.Count > 0)
+                {
+                    CmbInmuebles.DataSource = new List<Inmueble>(SistemaCentral.Instancia.ListaInmuebles);
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al abrir el módulo: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error visual al refrescar la lista: " + ex.Message, "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        // =======================================================
+        // MÓDULO DE NAVEGACIÓN
+        // =======================================================
+        private void BtnAbrirRegistro_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FrmRegistrar pantallaRegistro = new FrmRegistrar();
+                pantallaRegistro.ShowDialog(); // El código se pausa aquí
+
+                // Al regresar, llamamos a nuestro método maestro
+                RefrescarListaEliminar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al abrir registro: " + ex.Message);
             }
         }
 
@@ -33,11 +65,12 @@ namespace SistemaGestionInmobiliaria
         {
             try
             {
-                MessageBox.Show("Módulo en desarrollo por DAVID.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FrmOperaciones pantallaOperaciones = new FrmOperaciones();
+                pantallaOperaciones.ShowDialog();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al abrir el módulo de Operaciones: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -45,94 +78,63 @@ namespace SistemaGestionInmobiliaria
         {
             try
             {
-                MessageBox.Show("Módulo en desarrollo por DAVID.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                FrmReportes pantallaReportes = new FrmReportes();
+                pantallaReportes.ShowDialog();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al abrir el módulo de Reportes: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         // =======================================================
-        // MÓDULO DE ELIMINACIÓN
+        // MÓDULO DE ELIMINACIÓN Y EVENTOS DEL FORMULARIO
         // =======================================================
 
-        // Evento que se dispara al volver al menú, para refrescar la lista
+        // Refresca la lista automáticamente si el menú vuelve a estar activo
         private void FrmMenuPrincipal_Activated(object sender, EventArgs e)
         {
-            ActualizarListaEliminar();
+            RefrescarListaEliminar();
         }
 
-        // Método auxiliar para mantener el código limpio
-        private void ActualizarListaEliminar()
-        {
-            try
-            {
-                // Limpiamos la conexión anterior
-                CmbInmueblesEliminar.DataSource = null;
-
-                // Verificamos si hay datos en la nube (Singleton) y los cargamos
-                if (SistemaCentral.Instancia.ListaInmuebles.Count > 0)
-                {
-                    CmbInmueblesEliminar.DataSource = SistemaCentral.Instancia.ListaInmuebles;
-                }
-            }
-            catch (Exception ex) // 'ex' es variable local
-            {
-                MessageBox.Show("Error al cargar inmuebles: " + ex.Message, "Error interno", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        // Botón de eliminar con confirmación y manejo de errores
         private void BtnEliminar_Click(object sender, EventArgs e)
         {
             try
             {
-                // Validación 1: Verificar que haya un elemento seleccionado
-                if (CmbInmueblesEliminar.SelectedItem == null)
+                // Validación de selección vacía
+                if (CmbInmuebles.SelectedIndex == -1)
                 {
-                    MessageBox.Show("🛑 No hay ningún inmueble seleccionado para eliminar.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return; // Detiene la ejecución aquí mismo
+                    MessageBox.Show("Por favor, seleccione un inmueble de la lista.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
                 }
 
-                // Variable local
+                // Extracción del objeto Inmueble
+                Inmueble inmuebleAEliminar = (Inmueble)CmbInmuebles.SelectedItem;
+
+                // Confirmación de seguridad
                 DialogResult respuesta = MessageBox.Show(
-                    "⚠️ ¿Está completamente seguro que desea eliminar este inmueble del sistema?",
-                    "Confirmación Crítica",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question
-                );
+                    $"¿Seguro que desea eliminar el inmueble: {inmuebleAEliminar.Tipo}?",
+                    "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
 
                 if (respuesta == DialogResult.Yes)
                 {
-                    // Variable local
-                    var inmuebleAEliminar = (Inmueble)CmbInmueblesEliminar.SelectedItem;
-
-                    // Se elimina de la base de datos en memoria (Singleton)
+                    // Lo eliminamos de la bóveda (Singleton)
                     SistemaCentral.Instancia.ListaInmuebles.Remove(inmuebleAEliminar);
+                    MessageBox.Show("Inmueble eliminado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    MessageBox.Show("✅ El inmueble ha sido eliminado exitosamente.", "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    // Refrescamos visualmente el ComboBox
-                    ActualizarListaEliminar();
+                    // Refrescamos la interfaz llamando a nuestro método maestro
+                    RefrescarListaEliminar();
                 }
             }
-            catch (Exception ex) // 'ex' es variable local
+            catch (Exception ex)
             {
-                MessageBox.Show("🛑 Error crítico al intentar eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Error al eliminar: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void Label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void FrmMenuPrincipal_Load(object sender, EventArgs e)
-        {
-
-        }
-
+        // =======================================================
+        // MÓDULO DE SALIDA
+        // =======================================================
         private void BtnSalir_Click(object sender, EventArgs e)
         {
             DialogResult respuesta = MessageBox.Show(
@@ -144,8 +146,12 @@ namespace SistemaGestionInmobiliaria
 
             if (respuesta == DialogResult.Yes)
             {
-                Application.Exit(); // Esta funcionalidad Cierra todo el programa.
+                Application.Exit(); // Cierra todo el programa.
             }
         }
+
+        // Eventos vacíos generados por el diseñador (no borrar para evitar fantasmas)
+        private void Label1_Click(object sender, EventArgs e) { }
+        private void FrmMenuPrincipal_Load(object sender, EventArgs e) { }
     }
 }

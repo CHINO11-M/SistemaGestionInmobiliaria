@@ -32,7 +32,7 @@
             this.BtnAbrirOperaciones = new System.Windows.Forms.Button();
             this.BtnAbrirReportes = new System.Windows.Forms.Button();
             this.Label1 = new System.Windows.Forms.Label();
-            this.CmbInmueblesEliminar = new System.Windows.Forms.ComboBox();
+            this.CmbInmuebles = new System.Windows.Forms.ComboBox();
             this.BtnEliminar = new System.Windows.Forms.Button();
             this.BtnSalir = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -90,21 +90,21 @@
             this.Label1.Location = new System.Drawing.Point(31, 585);
             this.Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(378, 16);
+            this.Label1.Size = new System.Drawing.Size(473, 20);
             this.Label1.TabIndex = 3;
             this.Label1.Text = "Zona de Administración: Seleccione un inmueble para eliminar";
             this.Label1.Click += new System.EventHandler(this.Label1_Click);
             // 
-            // CmbInmueblesEliminar
+            // CmbInmuebles
             // 
-            this.CmbInmueblesEliminar.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.CmbInmueblesEliminar.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CmbInmueblesEliminar.FormattingEnabled = true;
-            this.CmbInmueblesEliminar.Location = new System.Drawing.Point(36, 625);
-            this.CmbInmueblesEliminar.Margin = new System.Windows.Forms.Padding(4);
-            this.CmbInmueblesEliminar.Name = "CmbInmueblesEliminar";
-            this.CmbInmueblesEliminar.Size = new System.Drawing.Size(240, 23);
-            this.CmbInmueblesEliminar.TabIndex = 4;
+            this.CmbInmuebles.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.CmbInmuebles.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CmbInmuebles.FormattingEnabled = true;
+            this.CmbInmuebles.Location = new System.Drawing.Point(36, 625);
+            this.CmbInmuebles.Margin = new System.Windows.Forms.Padding(4);
+            this.CmbInmuebles.Name = "CmbInmuebles";
+            this.CmbInmuebles.Size = new System.Drawing.Size(240, 26);
+            this.CmbInmuebles.TabIndex = 4;
             // 
             // BtnEliminar
             // 
@@ -135,13 +135,13 @@
             // 
             // FrmMenuPrincipal
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.HotTrack;
             this.ClientSize = new System.Drawing.Size(1570, 735);
             this.Controls.Add(this.BtnSalir);
             this.Controls.Add(this.BtnEliminar);
-            this.Controls.Add(this.CmbInmueblesEliminar);
+            this.Controls.Add(this.CmbInmuebles);
             this.Controls.Add(this.Label1);
             this.Controls.Add(this.BtnAbrirReportes);
             this.Controls.Add(this.BtnAbrirOperaciones);
@@ -164,7 +164,7 @@
         private System.Windows.Forms.Button BtnAbrirOperaciones;
         private System.Windows.Forms.Button BtnAbrirReportes;
         private System.Windows.Forms.Label Label1;
-        private System.Windows.Forms.ComboBox CmbInmueblesEliminar;
+        private System.Windows.Forms.ComboBox CmbInmuebles;
         private System.Windows.Forms.Button BtnEliminar;
         private System.Windows.Forms.Button BtnSalir;
     }

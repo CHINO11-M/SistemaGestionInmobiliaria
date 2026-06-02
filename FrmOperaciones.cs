@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Linq;
+using System.Linq; // Importante para poder filtrar listas
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,14 +12,10 @@ namespace SistemaGestionInmobiliaria
 {
     public partial class FrmOperaciones : Form
     {
-        // Cree dos lists para simular los datos con propiedade
-        private List<object> listaClientesSimulados = new List<object>();
-        private List<object> listaInmueblesSimulados = new List<object>();
-
         public FrmOperaciones()
         {
             InitializeComponent();
-            CargarDatosLocales();
+            // Eliminamos la carga de datos locales falsos
         }
 
         private void FrmOperaciones_Load(object sender, EventArgs e)
@@ -27,40 +23,36 @@ namespace SistemaGestionInmobiliaria
             CargarListasDesplegables();
         }
 
-        private void CargarDatosLocales()
-        {
-            // Clientes
-            listaClientesSimulados.Add(new { NombreCompleto = "David Rodríguez" });
-            listaClientesSimulados.Add(new { NombreCompleto = "María Alejandra" });
-            listaClientesSimulados.Add(new { NombreCompleto = "Juan Pérez" });
-
-            // Inmuebles
-            listaInmueblesSimulados.Add(new { Direccion = "Apartamento Playa El Ángel - Pampatar" });
-            listaInmueblesSimulados.Add(new { Direccion = "Local Comercial Mercado de Conejeros" });
-            listaInmueblesSimulados.Add(new { Direccion = "Quinta Av. Bolívar - Porlamar" });
-        }
-
         private void CargarListasDesplegables()
         {
             try
             {
-                // conecte clienes con cmbClientes
+                // 1. Conectar Clientes desde el Singleton real
                 cmbClientes.DataSource = null;
-                cmbClientes.DataSource = listaClientesSimulados;
-                cmbClientes.DisplayMember = "NombreCompleto";
+                if (SistemaCentral.Instancia.ListaClientes.Count > 0)
+                {
+                    // Usamos la clonación en memoria que aprendimos para evitar Exceptions
+                    cmbClientes.DataSource = new List<Cliente>(SistemaCentral.Instancia.ListaClientes);
+                }
 
-                // Conecte los inmuebles con cmbInmuebles
+                // 2. Conectar Inmuebles desde el Singleton (SOLO LOS DISPONIBLES)
                 cmbInmuebles.DataSource = null;
-                cmbInmuebles.DataSource = listaInmueblesSimulados;
-                cmbInmuebles.DisplayMember = "Direccion";
 
-               
+                // Filtramos la lista buscando solo los que tengan Disponible == true
+                var inmueblesDisponibles = SistemaCentral.Instancia.ListaInmuebles.Where(i => i.Disponible).ToList();
+
+                if (inmueblesDisponibles.Count > 0)
+                {
+                    cmbInmuebles.DataSource = inmueblesDisponibles;
+                }
+
+                // Limpiamos la selección visual por defecto
                 cmbClientes.SelectedIndex = -1;
                 cmbInmuebles.SelectedIndex = -1;
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error al cargar las listas: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error al cargar las listas desde la central: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -69,6 +61,7 @@ namespace SistemaGestionInmobiliaria
             errorProvider1.Clear();
             bool tieneError = false;
 
+            // Validaciones visuales
             if (cmbClientes.SelectedIndex == -1)
             {
                 errorProvider1.SetError(cmbClientes, "¡Requerido! Debe seleccionar un cliente.");
@@ -90,34 +83,28 @@ namespace SistemaGestionInmobiliaria
 
             try
             {
-                // registro que el usuario selecciona
-                var inmuebleSeleccionado = cmbInmuebles.SelectedItem;
-                var clienteSeleccionado = cmbClientes.SelectedItem;
+                // 1. Extraemos los objetos REALES con Casteo explícito
+                Cliente clienteSeleccionado = (Cliente)cmbClientes.SelectedItem;
+                Inmueble inmuebleSeleccionado = (Inmueble)cmbInmuebles.SelectedItem;
 
-                // ====================================================================
-                // MODIFICACIÓN: AGREGAR EL CONTRATO A LA LISTA ESTÁTICA DE REPORTES
-                // ====================================================================
-                // Usamos dynamic para leer las propiedades de los objetos anónimos simulados
-                dynamic clienteData = clienteSeleccionado;
-                dynamic inmuebleData = inmuebleSeleccionado;
-
-                var nuevoContrato = new
+                // 2. Creamos el objeto Contrato usando la estructura de tu Bóveda
+                Contrato nuevoContrato = new Contrato
                 {
-                    Cliente = clienteData.NombreCompleto,
-                    Inmueble = inmuebleData.Direccion,
-                    FechaRegistro = DateTime.Now.ToString("dd/MM/yyyy HH:mm")
+                    ClienteAsociado = clienteSeleccionado,
+                    InmuebleAsociado = inmuebleSeleccionado,
+                    FechaOperacion = DateTime.Now
                 };
 
-                FrmReportes.historialContratos.Add(nuevoContrato);
-                // ====================================================================
+                // 3. Lo inyectamos en la lista global de contratos
+                SistemaCentral.Instancia.ListaContratos.Add(nuevoContrato);
 
-                MessageBox.Show("¡Contrato generado con éxito y estado del inmueble actualizado!",
+                // 4. ¡LA MAGIA! Marcamos el inmueble como NO disponible en vez de borrarlo
+                inmuebleSeleccionado.Disponible = false;
+
+                MessageBox.Show("¡Contrato generado con éxito! El inmueble ha cambiado su estado a No Disponible.",
                                 "Operación Exitosa", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-
-                // Remueve el inmueble de la lista local para simular que ya se vendió/alquiló
-                listaInmueblesSimulados.Remove(inmuebleSeleccionado);
-
+                // 5. Refrescamos las listas (esto hará que el inmueble vendido desaparezca visualmente)
                 CargarListasDesplegables();
             }
             catch (Exception ex)
@@ -126,6 +113,9 @@ namespace SistemaGestionInmobiliaria
             }
         }
 
+        // ========================================================
+        // EVENTOS DUPLICADOS DEL DISEÑADOR (Mantenemos para no crear fantasmas)
+        // ========================================================
         private void FrmOperaciones_Load_1(object sender, EventArgs e)
         {
             CargarListasDesplegables();
@@ -139,7 +129,6 @@ namespace SistemaGestionInmobiliaria
         private void button1_Click(object sender, EventArgs e)
         {
             FrmReportes ventanaReportes = new FrmReportes();
-
             ventanaReportes.ShowDialog();
         }
     }
