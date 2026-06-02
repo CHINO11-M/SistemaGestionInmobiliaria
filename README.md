@@ -28,7 +28,7 @@ Para cumplir con la rúbrica de evaluación, el sistema se diseñó bajo una arq
 * **Encapsulamiento POO:** Creación de las clases de negocio (`Inmueble`, `Cliente`, `Contrato`) utilizando propiedades privadas y públicas estrictas.
 * **Operación Crear:** Desarrollo del `FrmRegistrar` con controles variados (TextBox, ComboBox) y validaciones de entrada para asegurar formatos correctos (ej. cédulas y teléfonos venezolanos) impidiendo el registro de campos vacíos.
 
-### 📊 Bloque 3: Operaciones, Actualización y Reportes ([Nombre del 3er Integrante])
+### 📊 Bloque 3: Operaciones, Actualización y Reportes ([David González)
 * **Operación Actualizar:** Desarrollo del `FrmOperaciones`, donde el usuario relaciona un Inmueble y un Cliente para crear un Contrato, alterando automáticamente el estado de la propiedad (ej. de Disponible a Vendida).
 * **Operación Leer (Reportes):** Diseño del `FrmReportes` integrando controles `DataGridView` para mostrar el inventario de inmuebles y el historial de transacciones en tiempo real.
 
